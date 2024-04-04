@@ -20,6 +20,7 @@
                 </h1>
                 <form class="space-y-4 md:space-y-6 kf-form "
                   method="post"
+                  id='myForm'
                   data-kw-no-error-message
                   data-kw-redirect="https://codingforentrepreneurs.github.io/kwesforms-landing/thank-you.html"
                 action="https://kwesforms.com/api/f/5PMvtHHtXhPPdUWNGwGv">
@@ -36,7 +37,7 @@
 
                   <div class="mb-5" kw-show="fields.email.endsWith('gmail.com') || fields.email.endsWith('yahoo.com')">
                     <label for="work_email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your work email</label>
-                    <input name='work_email' type="email" id="work_email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@flowbite.com" required />
+                    <input name='work_email' type="email" id="work_email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@flowbite.com" />
                   </div>
               
                     
@@ -51,5 +52,38 @@
 
   <script src="https://kwesforms.com/v2/kf-script.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+  <script>
+    const myFormId = 'myForm'
+    const myInputName = 'work_email'
+    const form = document.getElementById(myFormId);
+    const errorMessage = 'Work email is required (not gmail or yahoo).';
+
+    function getCurrentEmailVal() {
+      const emailInput = form.querySelector('input[name="email"]')
+      return `${emailInput.value}`;
+    }
+
+    function checkNonWorkDomain(value) {
+
+      return value.indexOf('@gmail.com') > -1 || value.indexOf('@yahoo.com') > -1
+    }
+
+    form.addEventListener('kwCustomRulesSet', function () {
+        window.setCustomKwRule(
+          myFormId, 
+          myInputName, 
+            errorMessage, 
+            function (value) {
+               const currentEmailVal = getCurrentEmailVal()
+               const valueEmpty = value === null || value === ""
+               if (valueEmpty && checkNonWorkDomain(currentEmailVal)) {
+                 return true
+               }
+               return checkNonWorkDomain(value);
+            }
+        );
+    });
+</script>
 </body>
 </html>
